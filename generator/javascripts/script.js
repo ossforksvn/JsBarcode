@@ -19,6 +19,15 @@ var defaultValues = {
 };
 
 $(document).ready(function(){
+    let downloadPngBtn = document.getElementById("download-png");
+    let downloadSvgBtn = document.getElementById("download-svg");
+
+    downloadPngBtn.removeEventListener("click", downloadPNG);
+    downloadSvgBtn.removeEventListener("click", downloadSVG);
+
+    downloadPngBtn.addEventListener("click", downloadPNG);
+    downloadSvgBtn.addEventListener("click", downloadSVG);
+
     $("#barcodeType").val("EAN13");
     $("#userInput").val(defaultValues["EAN13"]);
 
@@ -136,4 +145,44 @@ function calculateEAN13Checksum(code) {
     let checksum = (10 - (total % 10)) % 10;
 
     return checksum;
+}
+
+function downloadPNG() {
+    let svg = document.getElementById("barcode");
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext("2d");
+    let img = new Image();
+
+    let svgData = new XMLSerializer().serializeToString(svg);
+    let svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    let url = URL.createObjectURL(svgBlob);
+
+    img.onload = function () {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+        downloadImage(canvas.toDataURL("image/png"), "barcode.png");
+    };
+
+    img.src = url;
+}
+
+function downloadSVG() {
+    let svg = document.getElementById("barcode");
+    let svgData = new XMLSerializer().serializeToString(svg);
+    let blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    let url = URL.createObjectURL(blob);
+
+    downloadImage(url, "barcode.svg");
+    URL.revokeObjectURL(url);
+}
+
+function downloadImage(dataUrl, filename) {
+    let link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }

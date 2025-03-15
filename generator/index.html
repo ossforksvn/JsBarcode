@@ -17,6 +17,8 @@
     <script src="//cdn.jsdelivr.net/jsbarcode/3.3.20/JsBarcode.all.min.js"></script>
     <script src="javascripts/rangeslider.min.js"></script>
     <script src="javascripts/jqColorPicker.min.js"></script>
+    <script src="javascripts/canvas-toblob.js"></script>
+    <script src="javascripts/filesaver.js"></script>
     <script src="javascripts/script.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   </head>
@@ -37,6 +39,11 @@
       <div class="barcode-container">
         <svg id="barcode"></svg>
         <span id="invalid">Not valid data for this barcode type!</span>
+      </div>
+
+      <div id="dowload-container">
+        <button id="download-png">Download PNG</button>
+        <button id="download-svg">Download SVG</button>
       </div>
 
       <div class="container">
