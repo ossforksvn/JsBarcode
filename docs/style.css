@@ -111,6 +111,11 @@ html{
   margin-right: 25px;
 }
 
+#dowload-container {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
 .description-text{
   height:42px;
 }
