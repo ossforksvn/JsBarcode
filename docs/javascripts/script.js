@@ -3,8 +3,7 @@ var defaultValues = {
     CODE128A : "EXAMPLE",
     CODE128B : "Example text",
     CODE128C : "12345678",
-    EAN13 : "893838600001",
-    // EAN13 : "1234567890128",
+    EAN13 : "1234567890128",
     EAN8 : "12345670",
     UPC : "123456789999",
     CODE39 : "EXAMPLE TEXT",
@@ -19,11 +18,7 @@ var defaultValues = {
 };
 
 $(document).ready(function(){
-    $("#barcodeType").val("EAN13");
-    $("#userInput").val(defaultValues["EAN13"]);
-
     $("#userInput").on('input',newBarcode);
-
     $("#barcodeType").change(function(){
         $("#userInput").val( defaultValues[$(this).val()] );
 
@@ -82,12 +77,9 @@ $(document).ready(function(){
 });
 
 var newBarcode = function() {
-    var code = $("#userInput").val();
-    if($("#barcodeType").val() == "EAN13" && code.length == 12)
-      code += calculateEAN13Checksum(code);
-
     //Convert to boolean
-    $("#barcode").JsBarcode(code,
+    $("#barcode").JsBarcode(
+        $("#userInput").val(),
         {
           "format": $("#barcodeType").val(),
           "background": $("#background-color").val(),
@@ -120,20 +112,3 @@ var newBarcode = function() {
     $("#bar-margin-display").text($("#bar-margin").val());
     $("#bar-text-margin-display").text($("#bar-text-margin").val());
 };
-
-function calculateEAN13Checksum(code) {
-    if (code.length !== 12) throw new Error("EAN-13 must have 12 digits before checksum");
-
-    let sumOdd = 0, sumEven = 0;
-
-    for (let i = 0; i < 12; i++) {
-        let num = parseInt(code[i], 10);
-        if (i % 2 === 0) sumOdd += num;
-        else sumEven += num;
-    }
-
-    let total = sumOdd + (sumEven * 3);
-    let checksum = (10 - (total % 10)) % 10;
-
-    return checksum;
-}
